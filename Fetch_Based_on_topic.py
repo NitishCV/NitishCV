@@ -16,25 +16,31 @@ response = requests.post(
 # Courses
 
 backend_courses = requests.get(
-    "https://backend.careervira.com/content-manager/explorer/application::learn-content.learn-content?_limit=7000&_sort=id%3AASC&_start=0",
+    "https://backend.careervira.com/content-manager/explorer/application::learn-content.learn-content?_limit=7953&_sort=id%3AASC&status=approved&_start=6000",
     headers={"Authorization": f"Bearer {response['token']}"},
 ).json()
-#backend_courses = str(backend_courses).replace("\'", "\"")
-print(backend_courses)
+
+print(backend_courses[0]['topics'][0]['sub_category'])
 
 data = []
+'''
+for i in range(len(backend_courses)):
+    #data = backend_courses[i]['title'], backend_courses[i]['topics'][0]['default_display_label'], backend_courses[i]['status'], str(len(backend_courses[i]['title'])), backend_courses[i]['slug'], backend_courses[i]['partner']['name']
+    print(backend_courses[i]['topics'][0]['sub_category'])
+'''
 
-health_care = ['Healthcare & Medicine', 'Healthcare Operations', 'Health Management''Public Health',
-               'Mental Health', 'Health Informatics', 'Animal Health', 'Clinical Research']
-with open('healthcare.csv', 'w', newline='') as out:
+health_care = ["Healthcare Operations", "Health Management", "Healthcare & Medicine", "Health Informatics", "Public Health", "Fitness Instruction", "Mental Health", "Psychology", "Clinical Research", "Biopharmaceuticals", "Basic Science", "Patient Care", "Research", "Animal Health", "Teaching & Research", "Personality Development", "Learning & Development"]
+with open('healthcare_new_4.csv', 'w', newline='') as out:
     csv_out = csv.writer(out)
     for i in range(len(backend_courses)):
         try:
             data = backend_courses[i]['title'], backend_courses[i]['id'], backend_courses[i]['status'], backend_courses[i]['topics'][0]['default_display_label'], backend_courses[i]['partner']['name'], "https://www.careervira.com/course/"+backend_courses[i]['slug']
-            print(data[1])
             if data[3] in health_care:
+                print(data[1])
                 csv_out.writerow(data)
         except  ValueError:
             pass
         except IndexError:
             pass
+  
+
